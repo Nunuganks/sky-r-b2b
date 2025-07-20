@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    products: Product;
+    categories: Category;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -77,6 +79,8 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -119,6 +123,8 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  role: 'customer' | 'agency' | 'reseller' | 'vip' | 'admin';
+  discountPercent: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -158,6 +164,58 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  sku: string;
+  name: {
+    en: string;
+    bg: string;
+  };
+  description?: {
+    en?: string | null;
+    bg?: string | null;
+  };
+  price: number;
+  ownStock: number;
+  deliveryStock: number;
+  deliveryTime?: string | null;
+  supplierName?: string | null;
+  categories?: (number | Category)[] | null;
+  imageGallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  brandingOptions?:
+    | {
+        option: string;
+        id?: string | null;
+      }[]
+    | null;
+  syncUpdatedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  name: {
+    en: string;
+    bg: string;
+  };
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -170,6 +228,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -218,6 +284,8 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
+  discountPercent?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -252,6 +320,62 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  sku?: T;
+  name?:
+    | T
+    | {
+        en?: T;
+        bg?: T;
+      };
+  description?:
+    | T
+    | {
+        en?: T;
+        bg?: T;
+      };
+  price?: T;
+  ownStock?: T;
+  deliveryStock?: T;
+  deliveryTime?: T;
+  supplierName?: T;
+  categories?: T;
+  imageGallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  brandingOptions?:
+    | T
+    | {
+        option?: T;
+        id?: T;
+      };
+  syncUpdatedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  name?:
+    | T
+    | {
+        en?: T;
+        bg?: T;
+      };
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
