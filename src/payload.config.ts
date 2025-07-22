@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Categories } from './collections/categories'
 
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -37,5 +38,20 @@ export default buildConfig({
   plugins: [
     payloadCloudPlugin(),
     // storage-adapter-placeholder
+  ],
+
+  cors: [
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3000',
+    'http://192.168.1.13:3001',
+    'http://192.168.1.13:3002',
+  ],
+  csrf: [
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3000',
+    'http://192.168.1.13:3001',
+    'http://192.168.1.13:3002',
   ],
 })

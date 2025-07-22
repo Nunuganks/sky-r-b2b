@@ -5,7 +5,7 @@ export const Users: CollectionConfig = {
   auth: true,
   admin: {
     useAsTitle: 'email',
-    defaultColumns: ['email', 'role', 'discountPercent'],
+    defaultColumns: ['email', 'role', 'firstName', 'lastName', 'companyName'],
   },
   fields: [
     {
@@ -13,6 +13,28 @@ export const Users: CollectionConfig = {
       type: 'email',
       required: true,
       unique: true,
+    },
+    // Password field is automatically handled by Payload when auth: true
+    // No need to define it manually
+    {
+      name: 'firstName',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'lastName',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'phoneCountryCode',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'phoneNumber',
+      type: 'text',
+      required: true,
     },
     {
       name: 'role',
@@ -35,7 +57,120 @@ export const Users: CollectionConfig = {
       min: 0,
       max: 100,
     },
-    // ...other fields as needed...
+    // Company fields (for agencies)
+    {
+      name: 'companyName',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'eik',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'bulstat',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'mol',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'companyWebsite',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'companyActivity',
+      type: 'textarea',
+      required: false,
+    },
+    // Address fields
+    {
+      name: 'deliveryCountry',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'deliveryPostalCode',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'deliveryCity',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'deliveryAddress',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'invoiceCountry',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'invoicePostalCode',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'invoiceCity',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'invoiceAddress',
+      type: 'text',
+      required: false,
+    },
+    // Activation fields
+    {
+      name: 'activationToken',
+      type: 'text',
+      required: false,
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'isActivated',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+      },
+    },
+               {
+             name: 'isApproved',
+             type: 'checkbox',
+             defaultValue: false,
+             admin: {
+               position: 'sidebar',
+             },
+           },
+           // Password reset fields
+           {
+             name: 'resetPasswordToken',
+             type: 'text',
+             required: false,
+             admin: {
+               position: 'sidebar',
+             },
+           },
+           {
+             name: 'resetPasswordTokenExpiry',
+             type: 'date',
+             required: false,
+             admin: {
+               position: 'sidebar',
+             },
+           },
   ],
 };
 

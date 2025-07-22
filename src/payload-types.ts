@@ -123,8 +123,30 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  firstName: string;
+  lastName: string;
+  phoneCountryCode: string;
+  phoneNumber: string;
   role: 'customer' | 'agency' | 'reseller' | 'vip' | 'admin';
   discountPercent: number;
+  companyName?: string | null;
+  eik?: string | null;
+  bulstat?: string | null;
+  mol?: string | null;
+  companyWebsite?: string | null;
+  companyActivity?: string | null;
+  deliveryCountry?: string | null;
+  deliveryPostalCode?: string | null;
+  deliveryCity?: string | null;
+  deliveryAddress?: string | null;
+  invoiceCountry?: string | null;
+  invoicePostalCode?: string | null;
+  invoiceCity?: string | null;
+  invoiceAddress?: string | null;
+  activationToken?: string | null;
+  isActivated?: boolean | null;
+  isApproved?: boolean | null;
+  resetPasswordTokenExpiry?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -284,8 +306,30 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  phoneCountryCode?: T;
+  phoneNumber?: T;
   role?: T;
   discountPercent?: T;
+  companyName?: T;
+  eik?: T;
+  bulstat?: T;
+  mol?: T;
+  companyWebsite?: T;
+  companyActivity?: T;
+  deliveryCountry?: T;
+  deliveryPostalCode?: T;
+  deliveryCity?: T;
+  deliveryAddress?: T;
+  invoiceCountry?: T;
+  invoicePostalCode?: T;
+  invoiceCity?: T;
+  invoiceAddress?: T;
+  activationToken?: T;
+  isActivated?: T;
+  isApproved?: T;
+  resetPasswordTokenExpiry?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
