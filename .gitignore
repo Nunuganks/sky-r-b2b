@@ -1,52 +1,54 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-
-/.idea/*
-!/.idea/runConfigurations
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# === General ===
 .DS_Store
 *.pem
+*.log
+*.tsbuildinfo
 
-# debug
+# === IDEs ===
+.idea/
+.vscode/
+
+# === Node ===
+node_modules/
+**/node_modules/
+
+# === Yarn / pnpm / npm ===
+.pnp
+.pnp.js
+.yarn/install-state.gz
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# === Environment Variables ===
 .env
 .env.*
 !.env.example
+**/.env
+**/.env.*
 
-# vercel
-.vercel
+# === Next.js (Frontend) ===
+**/.next/
+**/out/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# === Build / Dist ===
+**/build/
+**/dist/
 
-.env
+# === Coverage / Test Artifacts ===
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+**/test-results/
+**/playwright-report/
 
+# === Media ===
 /media
 
-# Playwright
-node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
+# === Vercel ===
+.vercel
+
+# === TypeScript ===
+next-env.d.ts
