@@ -11,6 +11,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Categories } from './collections/categories'
+import { Carts } from './collections/Carts'
 
 
 const filename = fileURLToPath(import.meta.url)
@@ -23,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Products, Categories],
+  collections: [Users, Media, Products, Categories, Carts],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -46,6 +47,9 @@ export default buildConfig({
     'http://localhost:3000',
     'http://192.168.1.13:3001',
     'http://192.168.1.13:3002',
+    'http://localhost:3001/',
+    'http://localhost:3002/',
+    'http://localhost:3000/',
   ],
   csrf: [
     'http://localhost:3001',
@@ -53,5 +57,8 @@ export default buildConfig({
     'http://localhost:3000',
     'http://192.168.1.13:3001',
     'http://192.168.1.13:3002',
+    'http://localhost:3001/',
+    'http://localhost:3002/',
+    'http://localhost:3000/',
   ],
 })

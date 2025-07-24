@@ -1,0 +1,114 @@
+// Custom styles for compact image gallery in Payload admin
+
+// Make array items more compact
+.payload-array-field {
+  .payload-array-field__row {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #f9fafb;
+    position: relative;
+  }
+
+  .payload-array-field__row-header {
+    padding: 0.25rem 0;
+  }
+
+  .payload-array-field__row-content {
+    padding: 0.5rem;
+  }
+}
+
+// Compact gallery specific styles
+.compact-gallery {
+  .payload-array-field__row {
+    border: 2px solid #e5e7eb;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: #8b5cf6;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
+    }
+  }
+  
+  .payload-upload-field__thumbnail {
+    width: 60px !important;
+    height: 60px !important;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .payload-field__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+// Compact image upload fields
+.payload-upload-field {
+  .payload-upload-field__thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+
+  .payload-upload-field__file-info {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+}
+
+// Make sidebar fields more compact
+.payload-sidebar {
+  .payload-field {
+    margin-bottom: 0.5rem;
+  }
+
+  .payload-field__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .payload-field__input {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+// Compact array add button
+.payload-array-field__add-button {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  color: #6b7280;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+    background: #f3f4f6;
+  }
+}
+
+// Main image indicator
+.payload-checkbox-field {
+  .payload-checkbox-field__input:checked + .payload-checkbox-field__label::after {
+    content: " (Основен)";
+    color: #059669;
+    font-weight: 600;
+  }
+}
+
+// Compact field descriptions
+.payload-field__description {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+} 

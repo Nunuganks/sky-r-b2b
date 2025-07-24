@@ -7,7 +7,7 @@ export const Products: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'sku',
-    defaultColumns: ['sku', 'name', 'price', 'ownStock', 'deliveryStock', 'syncUpdatedAt'],
+    defaultColumns: ['mainImage', 'name', 'sku', 'price', 'ownStock', 'deliveryStock', 'published'],
   },
   fields: [
     {
@@ -24,6 +24,7 @@ export const Products: CollectionConfig = {
         { name: 'bg', type: 'text', required: true },
       ],
       required: true,
+
     },
     {
       name: 'description',
@@ -74,6 +75,15 @@ export const Products: CollectionConfig = {
       required: false,
     },
     {
+      name: 'mainImage',
+      type: 'upload',
+      relationTo: 'media',
+      required: false,
+      admin: {
+        description: 'Main product image (will be shown in product lists)',
+      },
+    },
+    {
       name: 'imageGallery',
       type: 'array',
       fields: [
@@ -82,9 +92,34 @@ export const Products: CollectionConfig = {
           type: 'upload',
           relationTo: 'media',
           required: true,
+          admin: {
+            description: 'Upload product image',
+          },
+        },
+        {
+          name: 'alt',
+          type: 'text',
+          required: false,
+          admin: {
+            description: 'Alt text for accessibility',
+            position: 'sidebar',
+          },
+        },
+        {
+          name: 'isMain',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            description: 'Set as main product image',
+            position: 'sidebar',
+          },
         },
       ],
       required: false,
+      admin: {
+        description: 'Upload product images. First image will be used as the main product image.',
+        position: 'sidebar',
+      },
     },
     {
       name: 'brandingOptions',
@@ -95,11 +130,68 @@ export const Products: CollectionConfig = {
       required: false,
     },
     {
+      name: 'published',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description: 'Control whether this product is visible on the website',
+      },
+    },
+    {
       name: 'syncUpdatedAt',
       type: 'date',
       required: false,
     },
   ],
+  hooks: {
+    beforeChange: [
+      async ({ data, req, operation }) => {
+        // Auto-set main image from first image in gallery if gallery has images
+        if (data.imageGallery && data.imageGallery.length > 0) {
+          // Set the first image as main if no main image is set
+          let hasMainImage = false;
+          data.imageGallery.forEach((item: any) => {
+            if (item.isMain) {
+              hasMainImage = true;
+            }
+          });
+          
+          if (!hasMainImage) {
+            data.imageGallery[0].isMain = true;
+          }
+          
+          // Set the main image field to the first main image
+          const mainImageItem = data.imageGallery.find((item: any) => item.isMain);
+          if (mainImageItem) {
+            data.mainImage = mainImageItem.image;
+          } else {
+            data.mainImage = data.imageGallery[0].image;
+          }
+        }
+        return data;
+      },
+    ],
+    afterChange: [
+      async ({ doc, req, operation }) => {
+        // If this is a duplicate operation, update the SKU
+        if (operation === 'create' && doc.sku && doc.sku.includes('-copy')) {
+          // Generate a unique SKU for the duplicated product
+          const timestamp = Date.now();
+          const newSku = `${doc.sku.replace('-copy', '')}-${timestamp}`;
+          
+          // Update the document with the new SKU
+          await req.payload.update({
+            collection: 'products',
+            id: doc.id,
+            data: {
+              ...doc,
+              sku: newSku,
+            },
+          });
+        }
+      },
+    ],
+  },
 };
 
 export default Products;

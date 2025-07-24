@@ -1,67 +1,112 @@
-# Payload Blank Template
+# SKY-R B2B Platform (Monorepo)
 
-This template comes configured with the bare minimum to get started on anything you need.
+This is a monorepo that contains both the **frontend** (Next.js) and **backend** (Payload CMS) of the SKY-R B2B platform.
 
-## Quick start
+---
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## 📁 Folder Structure
 
-## Quick Start - local setup
+```
+sky-r-b2b/
+├── frontend/   # Next.js application
+└── backend/    # Payload CMS + API backend
+```
 
-To spin up this template locally, follow these steps:
+---
 
-### Clone
+## 🚀 Quick Start
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+### Clone the repo
 
-### Development
+```bash
+git clone https://github.com/Nunuganks/sky-r-b2b.git
+cd sky-r-b2b
+```
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URI` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+---
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+## 🧪 Local Development
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+### Frontend (Next.js)
 
-#### Docker (Optional)
+```bash
+cd frontend
+cp .env.example .env.local
+npm install
+npm run dev
+```
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+Then open: [http://localhost:3000](http://localhost:3000)
 
-To do so, follow these steps:
+### Backend (Payload CMS)
 
-- Modify the `MONGODB_URI` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URI` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+```bash
+cd backend
+cp .env.example .env
+npm install
+npm run dev
+```
 
-## How it works
+Then open: [http://localhost:3001](http://localhost:3001) (or your configured port)
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+---
 
-### Collections
+## 🐳 Docker (Optional - Backend)
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+If you prefer to use Docker for the backend instead of installing MongoDB locally, use the provided `docker-compose.yml`:
 
-- #### Users (Authentication)
+```bash
+cd backend
+cp .env.example .env
+docker-compose up
+```
 
-  Users are auth-enabled collections that have access to the admin panel.
+> Make sure your `.env` contains:
+```env
+MONGODB_URI=mongodb://127.0.0.1/<your_db>
+```
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+---
 
-- #### Media
+## 🔧 Environment Variables
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+### Frontend
 
-### Docker
+- Located in `/frontend/.env.local`
+- See `/frontend/.env.example` for required keys
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+### Backend
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+- Located in `/backend/.env`
+- Contains Payload + MongoDB config
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+---
 
-## Questions
+## 🧱 How It Works (Payload Overview)
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+The Payload CMS backend is configured with:
+
+- **Users Collection** — for admin authentication
+- **Media Collection** — with upload, image resizing, and focal point enabled
+
+See [Payload Collections](https://payloadcms.com/docs/configuration/collections) for how to extend.
+
+---
+
+## 🌍 Deployment
+
+- Frontend can be deployed to Vercel or another platform of your choice.
+- Backend can be containerized or hosted on a Node server (with MongoDB and optionally S3 for media).
+
+---
+
+## 🙋 Questions & Support
+
+- Payload CMS Community: [Discord](https://discord.com/invite/payload)
+- GitHub Discussions: [Payload GitHub](https://github.com/payloadcms/payload/discussions)
+
+---
+
+## ✨ Credits
+
+This project is based on the [Payload Blank Template](https://github.com/payloadcms/payload) with monorepo enhancements for production use.

@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       ? (user as any).discountPercent ?? 0
       : 0;
 
-  const res = await fetch(`${CMS_URL}/api/products?limit=100`);
+  const res = await fetch(`${CMS_URL}/api/products?limit=100&where[published][equals]=true`);
   const data = await res.json();
   const products = data.docs || [];
 
@@ -43,6 +43,9 @@ export async function GET(req: NextRequest) {
     categories: p.categories,
     price: p.price,
     ownStock: p.ownStock,
+    deliveryStock: p.deliveryStock,
+    deliveryTime: p.deliveryTime,
+    supplierName: p.supplierName,
     discountedPrice: user ? p.price * (1 - discount / 100) : undefined,
   }));
 

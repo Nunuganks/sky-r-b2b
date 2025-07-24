@@ -1,0 +1,19 @@
+{
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImVtYWlsIjoiYW5kcmVhQHNreS1yLmNvbSIsInJvbGUiOiJhZ2VuY3kiLCJkaXNjb3VudFBlcmNlbnQiOjIwLCJpYXQiOjE3NTMzMTE5NDgsImV4cCI6MTc1MzkxNjc0OH0.26fHWEm7hrY9rhmlIkUuTlVO1C_Icztxz0ayw8lqRGk": [
+    {
+      "id": 1,
+      "sku": "1969-R",
+      "name": {
+        "en": "Flash - metal ball pen",
+        "bg": "Flash - метална химикалка"
+      },
+      "price": 0.6,
+      "discountedPrice": 0.48,
+      "quantity": 1,
+      "imageUrl": "/api/media/file/1969-or.jpg",
+      "stockStatus": "available",
+      "deliveryTime": "7-10 days",
+      "supplierName": "Stricker"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import '../globals.css';
 import Navigation from '../components/Navigation';
+import { CartProvider } from '../contexts/CartContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,10 +22,12 @@ export default async function RootLayout({ children, params }: LayoutProps) {
     <html lang={locale}>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Navigation />
-          <main>
-            {children}
-          </main>
+          <CartProvider>
+            <Navigation />
+            <main>
+              {children}
+            </main>
+          </CartProvider>
         </NextIntlClientProvider>
       </body>
     </html>

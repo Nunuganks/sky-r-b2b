@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     products: Product;
     categories: Category;
+    carts: Cart;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -81,6 +82,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    carts: CartsSelect<false> | CartsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -205,9 +207,27 @@ export interface Product {
   deliveryTime?: string | null;
   supplierName?: string | null;
   categories?: (number | Category)[] | null;
+  /**
+   * Main product image (will be shown in product lists)
+   */
+  mainImage?: (number | null) | Media;
+  /**
+   * Upload product images. First image will be used as the main product image.
+   */
   imageGallery?:
     | {
+        /**
+         * Upload product image
+         */
         image: number | Media;
+        /**
+         * Alt text for accessibility
+         */
+        alt?: string | null;
+        /**
+         * Set as main product image
+         */
+        isMain?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -217,6 +237,10 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Control whether this product is visible on the website
+   */
+  published?: boolean | null;
   syncUpdatedAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -233,6 +257,36 @@ export interface Category {
     bg: string;
   };
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carts".
+ */
+export interface Cart {
+  id: number;
+  user: number | User;
+  items?:
+    | {
+        productId: string;
+        sku: string;
+        name: {
+          en: string;
+          bg: string;
+        };
+        price: number;
+        discountedPrice?: number | null;
+        quantity: number;
+        imageUrl?: string | null;
+        stockStatus: 'available' | 'delivery' | 'unavailable';
+        deliveryTime?: string | null;
+        supplierName?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  itemsCount?: number | null;
+  total?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -258,6 +312,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'carts';
+        value: number | Cart;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -389,10 +447,13 @@ export interface ProductsSelect<T extends boolean = true> {
   deliveryTime?: T;
   supplierName?: T;
   categories?: T;
+  mainImage?: T;
   imageGallery?:
     | T
     | {
         image?: T;
+        alt?: T;
+        isMain?: T;
         id?: T;
       };
   brandingOptions?:
@@ -401,6 +462,7 @@ export interface ProductsSelect<T extends boolean = true> {
         option?: T;
         id?: T;
       };
+  published?: T;
   syncUpdatedAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -418,6 +480,37 @@ export interface CategoriesSelect<T extends boolean = true> {
         bg?: T;
       };
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carts_select".
+ */
+export interface CartsSelect<T extends boolean = true> {
+  user?: T;
+  items?:
+    | T
+    | {
+        productId?: T;
+        sku?: T;
+        name?:
+          | T
+          | {
+              en?: T;
+              bg?: T;
+            };
+        price?: T;
+        discountedPrice?: T;
+        quantity?: T;
+        imageUrl?: T;
+        stockStatus?: T;
+        deliveryTime?: T;
+        supplierName?: T;
+        id?: T;
+      };
+  itemsCount?: T;
+  total?: T;
   updatedAt?: T;
   createdAt?: T;
 }
