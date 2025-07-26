@@ -75,6 +75,21 @@ export const Products: CollectionConfig = {
       required: false,
     },
     {
+      name: 'tags',
+      type: 'array',
+      fields: [
+        {
+          name: 'tag',
+          type: 'text',
+          required: true,
+        },
+      ],
+      required: false,
+      admin: {
+        description: 'Add tags to help organize and search products',
+      },
+    },
+    {
       name: 'mainImage',
       type: 'upload',
       relationTo: 'media',

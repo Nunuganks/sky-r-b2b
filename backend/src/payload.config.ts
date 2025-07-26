@@ -25,6 +25,13 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    // Add session configuration
+    session: {
+      // Extend session timeout to 2 hours (in milliseconds)
+      maxAge: 2 * 60 * 60 * 1000,
+      // Show warning 5 minutes before timeout
+      warningTime: 5 * 60 * 1000,
+    },
   },
   collections: [Users, Media, Products, ProductVariants, VariantOptions, Categories, Carts],
   editor: lexicalEditor(),

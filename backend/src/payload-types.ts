@@ -212,6 +212,15 @@ export interface Product {
   supplierName?: string | null;
   categories?: (number | Category)[] | null;
   /**
+   * Add tags to help organize and search products
+   */
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Main product image (will be shown in product lists)
    */
   mainImage?: (number | null) | Media;
@@ -567,6 +576,12 @@ export interface ProductsSelect<T extends boolean = true> {
   deliveryTime?: T;
   supplierName?: T;
   categories?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
   mainImage?: T;
   imageGallery?:
     | T
