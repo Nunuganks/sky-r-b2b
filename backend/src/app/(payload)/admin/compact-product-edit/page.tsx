@@ -1252,13 +1252,31 @@ export default function CompactProductListPage() {
             </div>
             <div className="payload-table__body">
               {products.map((product) => (
-                <div key={product.id} className={`payload-table__row ${selectedProducts.has(product.id) ? 'payload-table__row--selected' : ''}`}>
+                <div 
+                  key={product.id} 
+                  className={`payload-table__row ${selectedProducts.has(product.id) ? 'payload-table__row--selected' : ''}`}
+                  onClick={(e) => {
+                    // Prevent row click when clicking on checkbox or action buttons
+                    const target = e.target as HTMLElement;
+                    if (target instanceof HTMLInputElement || 
+                        target instanceof HTMLButtonElement || 
+                        target.closest('button') || 
+                        target.closest('.payload-table__link')) {
+                      return;
+                    }
+                    handleSelectProduct(product.id);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div className="payload-table__cell">
                     <input 
                       type="checkbox" 
                       className="payload-checkbox" 
                       checked={selectedProducts.has(product.id)}
-                      onChange={() => handleSelectProduct(product.id)}
+                      onChange={(e) => {
+                        e.stopPropagation(); // Prevent row click when clicking checkbox
+                        handleSelectProduct(product.id);
+                      }}
                     />
                   </div>
                   {visibleColumns.mainImage && (
