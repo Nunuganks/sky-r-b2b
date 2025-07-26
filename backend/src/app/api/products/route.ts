@@ -12,8 +12,16 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '50');
     const search = searchParams.get('search') || '';
+    const includeUnpublished = searchParams.get('includeUnpublished') === 'true';
 
     const query: any = {};
+
+    // Only show published products by default unless explicitly requested
+    if (!includeUnpublished) {
+      query.published = {
+        equals: true,
+      };
+    }
 
     if (search) {
       query.or = [

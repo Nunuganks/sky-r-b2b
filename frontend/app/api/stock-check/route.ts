@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch product from CMS
-    const response = await fetch(`${CMS_URL}/api/products?where[sku][equals]=${sku}&limit=1`);
+    const response = await fetch(`${CMS_URL}/api/products?where[sku][equals]=${sku}&where[published][equals]=true&limit=1`);
     
     if (!response.ok) {
       return NextResponse.json(

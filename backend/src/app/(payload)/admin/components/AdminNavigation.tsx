@@ -13,7 +13,7 @@ const AdminNavigation: React.FC = () => {
           <h1 className="text-lg font-semibold text-gray-900">Admin Panel</h1>
           <nav className="flex space-x-4">
             <button
-              onClick={() => router.push('/admin/collections/products')}
+              onClick={() => router.push('/admin/compact-product-edit')}
               className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
             >
               Standard Products

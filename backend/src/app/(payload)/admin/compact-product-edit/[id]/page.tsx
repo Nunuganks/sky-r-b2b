@@ -30,6 +30,10 @@ export default function CompactProductEditPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  
+  // Navigation state management
+  const [navOpen, setNavOpen] = useState(true);
+  const [collectionsOpen, setCollectionsOpen] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -106,20 +110,36 @@ export default function CompactProductEditPage() {
 
   return (
     <div className="payload-admin-layout">
-      {/* Sidebar */}
-      <aside className="nav nav--nav-open nav--nav-animate nav--nav-hydrated">
+      {/* Sidebar with functional toggles */}
+      <aside className={`nav ${navOpen ? 'nav--nav-open' : 'nav--nav-closed'} nav--nav-animate nav--nav-hydrated`}>
         <div className="nav__scroll" style={{ overscrollBehavior: 'auto' }}>
           <nav className="nav__wrap">
             <div className="nav-group Collections" id="nav-group-Collections">
-              <button className="nav-group__toggle nav-group__toggle--open" tabIndex={0} type="button">
+              <button 
+                className={`nav-group__toggle ${collectionsOpen ? 'nav-group__toggle--open' : 'nav-group__toggle--closed'}`} 
+                tabIndex={0} 
+                type="button"
+                onClick={() => setCollectionsOpen(!collectionsOpen)}
+              >
                 <div className="nav-group__label">Collections</div>
                 <div className="nav-group__indicator">
-                  <svg className="icon icon--chevron nav-group__indicator" height="100%" style={{ transform: 'rotate(180deg)' }} viewBox="0 0 20 20" width="100%" xmlns="http://www.w3.org/2000/svg">
+                  <svg 
+                    className="icon icon--chevron nav-group__indicator" 
+                    height="100%" 
+                    style={{ transform: collectionsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} 
+                    viewBox="0 0 20 20" 
+                    width="100%" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path className="stroke" d="M14 8L10 12L6 8" strokeLinecap="square"></path>
                   </svg>
                 </div>
               </button>
-              <div aria-hidden="false" className="rah-static rah-static--height-auto" style={{ transition: 'height 0ms ease' }}>
+              <div 
+                aria-hidden={!collectionsOpen} 
+                className={`rah-static ${collectionsOpen ? 'rah-static--height-auto' : 'rah-static--height-0'}`} 
+                style={{ transition: 'height 0ms ease' }}
+              >
                 <div>
                   <div className="nav-group__content">
                     <a className="nav__link" id="nav-users" href="/admin/collections/users">
@@ -131,8 +151,17 @@ export default function CompactProductEditPage() {
                     <a className="nav__link nav__link--active" id="nav-products" href="/admin/collections/products">
                       <span className="nav__link-label">Products</span>
                     </a>
+                    <a className="nav__link" id="nav-product-variants" href="/admin/collections/product-variants">
+                      <span className="nav__link-label">Product Variants</span>
+                    </a>
+                    <a className="nav__link" id="nav-variant-options" href="/admin/collections/variant-options">
+                      <span className="nav__link-label">Variant Options</span>
+                    </a>
                     <a className="nav__link" id="nav-categories" href="/admin/collections/categories">
                       <span className="nav__link-label">Categories</span>
+                    </a>
+                    <a className="nav__link" id="nav-carts" href="/admin/collections/carts">
+                      <span className="nav__link-label">Carts</span>
                     </a>
                   </div>
                 </div>
@@ -148,7 +177,11 @@ export default function CompactProductEditPage() {
           </nav>
           <div className="nav__header">
             <div className="nav__header-content">
-              <button className="nav__mobile-close" type="button">
+              <button 
+                className="nav__mobile-close" 
+                type="button"
+                onClick={() => setNavOpen(!navOpen)}
+              >
                 <div className="hamburger">
                   <div aria-label="Close" className="hamburger__close-icon" title="Close">
                     <svg className="icon icon--close-menu" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -164,30 +197,27 @@ export default function CompactProductEditPage() {
 
       {/* Main Content Area */}
       <div className="payload-content">
-        {/* Header */}
+        {/* Header with navigation toggle */}
         <div className="payload-header">
           <div className="payload-header__content">
-            <div className="payload-header__breadcrumbs">
-              <div className="payload-breadcrumb">
-                <svg className="payload-breadcrumb__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <div className="payload-header__left">
+              <button 
+                className="payload-header__nav-toggle"
+                onClick={() => setNavOpen(!navOpen)}
+                aria-label={navOpen ? "Close navigation" : "Open navigation"}
+              >
+                <svg className="payload-header__nav-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                <span className="payload-breadcrumb__text">/ Products</span>
+              </button>
+              <div className="payload-header__breadcrumbs">
+                <div className="payload-breadcrumb">
+                  <svg className="payload-breadcrumb__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <span className="payload-breadcrumb__text">/ Products</span>
+                </div>
               </div>
-            </div>
-            <div className="payload-header__actions">
-              <button
-                onClick={() => router.push('/admin/collections/products')}
-                className="payload-button payload-button--style-secondary"
-              >
-                Standard Admin
-              </button>
-              <button
-                onClick={() => router.push('/admin/compact-product-edit')}
-                className="payload-button payload-button--style-primary"
-              >
-                Compact Gallery Editor
-              </button>
             </div>
           </div>
         </div>

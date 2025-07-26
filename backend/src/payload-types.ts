@@ -70,6 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     products: Product;
+    'product-variants': ProductVariant;
+    'variant-options': VariantOption;
     categories: Category;
     carts: Cart;
     'payload-locked-documents': PayloadLockedDocument;
@@ -81,6 +83,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    'product-variants': ProductVariantsSelect<false> | ProductVariantsSelect<true>;
+    'variant-options': VariantOptionsSelect<false> | VariantOptionsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     carts: CartsSelect<false> | CartsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -262,6 +266,114 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-variants".
+ */
+export interface ProductVariant {
+  id: number;
+  /**
+   * Parent product this variant belongs to
+   */
+  product: number | Product;
+  /**
+   * Unique SKU for this specific variant
+   */
+  sku: string;
+  /**
+   * Variant options that define this variant (e.g., Red + Large)
+   */
+  variantOptions: {
+    /**
+     * Variant option (e.g., color, size)
+     */
+    option: number | VariantOption;
+    id?: string | null;
+  }[];
+  /**
+   * Price for this specific variant (overrides product base price)
+   */
+  price: number;
+  /**
+   * Stock available in own warehouse
+   */
+  ownStock: number;
+  /**
+   * Stock available for delivery
+   */
+  deliveryStock: number;
+  /**
+   * Specific delivery time for this variant (overrides product delivery time)
+   */
+  deliveryTime?: string | null;
+  /**
+   * Main image for this specific variant
+   */
+  mainImage?: (number | null) | Media;
+  /**
+   * Variant-specific images
+   */
+  imageGallery?:
+    | {
+        /**
+         * Upload variant image
+         */
+        image: number | Media;
+        /**
+         * Alt text for accessibility
+         */
+        alt?: string | null;
+        /**
+         * Set as main variant image
+         */
+        isMain?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Whether this variant is available for purchase
+   */
+  active?: boolean | null;
+  /**
+   * Order in which this variant appears in lists
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variant-options".
+ */
+export interface VariantOption {
+  id: number;
+  /**
+   * Display name for this option (e.g., "Red", "Large")
+   */
+  name: string;
+  /**
+   * Type of variant option
+   */
+  type: 'color' | 'size' | 'material' | 'style';
+  /**
+   * Internal value/code for this option
+   */
+  value: string;
+  /**
+   * Hex color code (for color type variants)
+   */
+  colorCode?: string | null;
+  /**
+   * Order in which this option appears in lists
+   */
+  sortOrder?: number | null;
+  /**
+   * Whether this option is available for use
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "carts".
  */
 export interface Cart {
@@ -308,6 +420,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'products';
         value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'product-variants';
+        value: number | ProductVariant;
+      } | null)
+    | ({
+        relationTo: 'variant-options';
+        value: number | VariantOption;
       } | null)
     | ({
         relationTo: 'categories';
@@ -464,6 +584,51 @@ export interface ProductsSelect<T extends boolean = true> {
       };
   published?: T;
   syncUpdatedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-variants_select".
+ */
+export interface ProductVariantsSelect<T extends boolean = true> {
+  product?: T;
+  sku?: T;
+  variantOptions?:
+    | T
+    | {
+        option?: T;
+        id?: T;
+      };
+  price?: T;
+  ownStock?: T;
+  deliveryStock?: T;
+  deliveryTime?: T;
+  mainImage?: T;
+  imageGallery?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+        isMain?: T;
+        id?: T;
+      };
+  active?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variant-options_select".
+ */
+export interface VariantOptionsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  value?: T;
+  colorCode?: T;
+  sortOrder?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }

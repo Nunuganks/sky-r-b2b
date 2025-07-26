@@ -40,6 +40,11 @@ export default function CompactProductListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showColumns, setShowColumns] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Navigation state management
+  const [navOpen, setNavOpen] = useState(true);
+  const [collectionsOpen, setCollectionsOpen] = useState(true);
+  
   const [visibleColumns, setVisibleColumns] = useState({
     sku: true,
     price: true,
@@ -48,8 +53,9 @@ export default function CompactProductListPage() {
     published: true,
     nameBg: true,
     mainImage: true,
-    actions: true,
+    createdAt: true,
     // Additional fields from original Payload CMS
+    actions: false,
     id: false,
     nameEn: false,
     descriptionEn: false,
@@ -60,7 +66,6 @@ export default function CompactProductListPage() {
     imageGallery: false,
     brandingOptions: false,
     updatedAt: false,
-    createdAt: false,
     syncUpdatedAt: false
   });
   const [filters, setFilters] = useState({
@@ -74,10 +79,38 @@ export default function CompactProductListPage() {
   const columnsDropdownRef = useRef<HTMLDivElement>(null);
   const filtersDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Function to toggle published status
+  const togglePublishedStatus = async (productId: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          published: !currentStatus,
+        }),
+      });
+
+      if (response.ok) {
+        // Update the local state
+        setProducts(products.map(product => 
+          product.id === productId 
+            ? { ...product, published: !currentStatus }
+            : product
+        ));
+      } else {
+        console.error('Failed to update published status');
+      }
+    } catch (error) {
+      console.error('Error updating published status:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        const response = await fetch('/api/products?includeUnpublished=true');
         if (response.ok) {
           const data = await response.json();
           setProducts(data.docs || data);
@@ -158,20 +191,36 @@ export default function CompactProductListPage() {
 
   return (
     <div className="payload-admin-layout">
-      {/* Sidebar */}
-      <aside className="nav nav--nav-open nav--nav-animate nav--nav-hydrated">
+      {/* Sidebar - Exact same as original Payload admin with functional toggles */}
+      <aside className={`nav ${navOpen ? 'nav--nav-open' : 'nav--nav-closed'} nav--nav-animate nav--nav-hydrated`}>
         <div className="nav__scroll" style={{ overscrollBehavior: 'auto' }}>
           <nav className="nav__wrap">
             <div className="nav-group Collections" id="nav-group-Collections">
-              <button className="nav-group__toggle nav-group__toggle--open" tabIndex={0} type="button">
+              <button 
+                className={`nav-group__toggle ${collectionsOpen ? 'nav-group__toggle--open' : 'nav-group__toggle--closed'}`} 
+                tabIndex={0} 
+                type="button"
+                onClick={() => setCollectionsOpen(!collectionsOpen)}
+              >
                 <div className="nav-group__label">Collections</div>
                 <div className="nav-group__indicator">
-                  <svg className="icon icon--chevron nav-group__indicator" height="100%" style={{ transform: 'rotate(180deg)' }} viewBox="0 0 20 20" width="100%" xmlns="http://www.w3.org/2000/svg">
+                  <svg 
+                    className="icon icon--chevron nav-group__indicator" 
+                    height="100%" 
+                    style={{ transform: collectionsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} 
+                    viewBox="0 0 20 20" 
+                    width="100%" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path className="stroke" d="M14 8L10 12L6 8" strokeLinecap="square"></path>
                   </svg>
                 </div>
               </button>
-              <div aria-hidden="false" className="rah-static rah-static--height-auto" style={{ transition: 'height 0ms ease' }}>
+              <div 
+                aria-hidden={!collectionsOpen} 
+                className={`rah-static ${collectionsOpen ? 'rah-static--height-auto' : 'rah-static--height-0'}`} 
+                style={{ transition: 'height 0ms ease' }}
+              >
                 <div>
                   <div className="nav-group__content">
                     <a className="nav__link" id="nav-users" href="/admin/collections/users">
@@ -183,8 +232,17 @@ export default function CompactProductListPage() {
                     <a className="nav__link nav__link--active" id="nav-products" href="/admin/collections/products">
                       <span className="nav__link-label">Products</span>
                     </a>
+                    <a className="nav__link" id="nav-product-variants" href="/admin/collections/product-variants">
+                      <span className="nav__link-label">Product Variants</span>
+                    </a>
+                    <a className="nav__link" id="nav-variant-options" href="/admin/collections/variant-options">
+                      <span className="nav__link-label">Variant Options</span>
+                    </a>
                     <a className="nav__link" id="nav-categories" href="/admin/collections/categories">
                       <span className="nav__link-label">Categories</span>
+                    </a>
+                    <a className="nav__link" id="nav-carts" href="/admin/collections/carts">
+                      <span className="nav__link-label">Carts</span>
                     </a>
                   </div>
                 </div>
@@ -200,7 +258,11 @@ export default function CompactProductListPage() {
           </nav>
           <div className="nav__header">
             <div className="nav__header-content">
-              <button className="nav__mobile-close" type="button">
+              <button 
+                className="nav__mobile-close" 
+                type="button"
+                onClick={() => setNavOpen(!navOpen)}
+              >
                 <div className="hamburger">
                   <div aria-label="Close" className="hamburger__close-icon" title="Close">
                     <svg className="icon icon--close-menu" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -216,30 +278,27 @@ export default function CompactProductListPage() {
 
       {/* Main Content Area */}
       <div className="payload-content">
-        {/* Header */}
+        {/* Header with navigation toggle */}
         <div className="payload-header">
           <div className="payload-header__content">
-            <div className="payload-header__breadcrumbs">
-              <div className="payload-breadcrumb">
-                <svg className="payload-breadcrumb__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <div className="payload-header__left">
+              <button 
+                className="payload-header__nav-toggle"
+                onClick={() => setNavOpen(!navOpen)}
+                aria-label={navOpen ? "Close navigation" : "Open navigation"}
+              >
+                <svg className="payload-header__nav-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                <span className="payload-breadcrumb__text">/ Products</span>
+              </button>
+              <div className="payload-header__breadcrumbs">
+                <div className="payload-breadcrumb">
+                  <svg className="payload-breadcrumb__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <span className="payload-breadcrumb__text">/ Products</span>
+                </div>
               </div>
-            </div>
-            <div className="payload-header__actions">
-              <button
-                onClick={() => router.push('/admin/collections/products')}
-                className="payload-button payload-button--style-secondary"
-              >
-                Standard Admin
-              </button>
-              <button
-                onClick={() => router.push('/admin/compact-product-edit')}
-                className="payload-button payload-button--style-primary"
-              >
-                Compact Gallery Editor
-              </button>
             </div>
           </div>
         </div>
@@ -250,7 +309,6 @@ export default function CompactProductListPage() {
           <div className="payload-page__header">
             <div className="payload-page__title">
               <h1 className="payload-page__title-text">Products</h1>
-              <p className="payload-page__title-subtitle">Compact Gallery Editor</p>
             </div>
             <div className="payload-page__actions">
               <button
@@ -1090,9 +1148,24 @@ export default function CompactProductListPage() {
                   )}
                   {visibleColumns.published && (
                     <div className="payload-table__cell">
-                      <span className={`payload-badge ${product.published ? 'payload-badge--success' : 'payload-badge--default'}`}>
-                        {product.published ? 'true' : 'false'}
-                      </span>
+                      <button
+                        onClick={() => togglePublishedStatus(product.id, product.published)}
+                        className={`payload-badge payload-badge--clickable ${product.published ? 'payload-badge--success' : 'payload-badge--default'}`}
+                        title={product.published ? 'Click to hide' : 'Click to show'}
+                      >
+                        {product.published ? (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                        ) : (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                          </svg>
+                        )}
+                        {product.published ? 'Visible' : 'Hidden'}
+                      </button>
                     </div>
                   )}
                   {visibleColumns.updatedAt && (
@@ -1108,16 +1181,6 @@ export default function CompactProductListPage() {
                   {visibleColumns.syncUpdatedAt && (
                     <div className="payload-table__cell">
                       {product.syncUpdatedAt ? new Date(product.syncUpdatedAt).toLocaleDateString() : 'N/A'}
-                    </div>
-                  )}
-                  {visibleColumns.actions && (
-                    <div className="payload-table__cell">
-                      <button
-                        onClick={() => router.push(`/admin/compact-product-edit/${product.id}`)}
-                        className="payload-button payload-button--style-primary payload-button--size-small"
-                      >
-                        Edit with Compact Gallery
-                      </button>
                     </div>
                   )}
                 </div>

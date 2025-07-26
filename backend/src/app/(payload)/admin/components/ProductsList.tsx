@@ -33,7 +33,7 @@ const ProductsList: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products?depth=2');
+      const response = await fetch('/api/products?depth=2&includeUnpublished=true');
       if (response.ok) {
         const data = await response.json();
         setProducts(data.docs || []);
